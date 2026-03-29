@@ -6,7 +6,6 @@ import os
 from flask import Flask
 from threading import Thread
 
-# --- 1. Keep Alive System (For 24/7 Hosting) ---
 app = Flask('')
 
 @app.route('/')
@@ -20,7 +19,6 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-# --- 2. Bot Configuration & Setup ---
 OWNERS = [1389628859225473277]  # Your ID
 
 class MyBot(commands.Bot):
@@ -30,19 +28,18 @@ class MyBot(commands.Bot):
 
     async def setup_hook(self):
         await self.tree.sync()
-        print(f"✅ Global Slash Commands Synced.")
+        print(f" Global Slash Commands Synced.")
 
 bot = MyBot()
 
 @bot.event
 async def on_ready():
     print(f'Logged in as: {bot.user.name}')
-    # Set Streaming status: By BuWael
+    # Change To UR NAME
     await bot.change_presence(
         activity=discord.Streaming(name="By BuWael", url="https://twitch.tv/HeiL")
     )
 
-# --- 3. High-Speed Broadcast Logic ---
 class BroadcastView(discord.ui.View):
     def __init__(self, message_text):
         super().__init__(timeout=60)
@@ -59,12 +56,11 @@ class BroadcastView(discord.ui.View):
             return False
 
     async def start_broadcast(self, interaction, member_list):
-        await interaction.response.send_message(f"🚀 **Starting Broadcast** to {len(member_list)} members...", ephemeral=True)
+        await interaction.response.send_message(f" **Starting Broadcast** to {len(member_list)} members...", ephemeral=True)
         
         success = 0
         failed = 0
         
-        # Batch sending (5 at a time) for speed
         for i in range(0, len(member_list), 5): 
             batch = member_list[i:i+5]
             tasks = [self.fast_send(m) for m in batch]
@@ -76,10 +72,10 @@ class BroadcastView(discord.ui.View):
             await asyncio.sleep(0.4) # Optimized delay
         
         await interaction.channel.send(
-            f"✅ **Broadcast Completed**\n"
-            f"👤 **Total Target:** {len(member_list)}\n"
-            f"🟢 **Success:** {success}\n"
-            f"🔴 **Failed:** {failed}"
+            f" **Broadcast Completed**\n"
+            f" **Total Target:** {len(member_list)}\n"
+            f" **Success:** {success}\n"
+            f" **Failed:** {failed}"
         )
 
     @discord.ui.button(label="All Members", style=discord.ButtonStyle.gray, emoji="🌍")
@@ -117,15 +113,13 @@ async def bc(interaction: discord.Interaction, message: str):
     view = BroadcastView(message)
     await interaction.response.send_message(embed=embed, view=view)
 
-# --- 5. Execution ---
 keep_alive()
 
 try:
-    # It will fetch the token from Render Environment Variables
     TOKEN = os.getenv('DISCORD_TOKEN')
     if TOKEN:
         bot.run(TOKEN)
     else:
-        print("❌ ERROR: 'DISCORD_TOKEN' not found in environment variables!")
+        print(" ERROR: 'DISCORD_TOKEN' not found in environment variables!")
 except Exception as e:
-    print(f"❌ Error starting the bot: {e}")
+    print(f" Error starting the bot: {e}")
