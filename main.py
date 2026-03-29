@@ -49,7 +49,6 @@ class BroadcastView(discord.ui.View):
         """Helper for high-speed sending with auto-mention."""
         if member.bot: return
         try:
-            # Auto-mention at the end of the message
             await member.send(f"{self.message_text}\n\n{member.mention}")
             return True
         except:
