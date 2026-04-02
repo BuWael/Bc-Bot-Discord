@@ -60,15 +60,15 @@ class BroadcastView(discord.ui.View):
         success = 0
         failed = 0
         
-        for i in range(0, len(member_list), 5): 
-            batch = member_list[i:i+5]
+        for i in range(0, len(member_list), 10): 
+            batch = member_list[i:i+10]
             tasks = [self.fast_send(m) for m in batch]
             results = await asyncio.gather(*tasks)
             
             success += results.count(True)
             failed += results.count(False)
             
-            await asyncio.sleep(0.4) # Optimized delay
+            await asyncio.sleep(0.5) # Optimized delay
         
         await interaction.channel.send(
             f" **Broadcast Completed**\n"
